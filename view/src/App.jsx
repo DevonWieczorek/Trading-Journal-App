@@ -1,6 +1,7 @@
 import React from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@material-ui/core/styles';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import MainRoutes from './routes/MainRoutes';
 
 const theme = createMuiTheme({
@@ -17,7 +18,11 @@ const theme = createMuiTheme({
 function App() {
   return (
       <MuiThemeProvider theme={theme}>
-          <MainRoutes />
+          <Router>
+            <Switch>
+                <MainRoutes />
+            </Switch>
+          </Router>
       </MuiThemeProvider>
   );
 }
