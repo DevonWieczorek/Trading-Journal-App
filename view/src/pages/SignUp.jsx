@@ -36,7 +36,7 @@ const styles = (theme) => ({
 	}
 });
 
-class signup extends Component {
+class SignUp extends Component {
 	constructor(props) {
 		super(props);
 
@@ -265,4 +265,4 @@ class signup extends Component {
 	}
 }
 
-export default withStyles(styles)(signup);
+export default withStyles(styles)(SignUp);
