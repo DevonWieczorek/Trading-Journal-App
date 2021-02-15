@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import MuiAlert from '@material-ui/lab/Alert';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import withStyles from '@material-ui/core/styles/withStyles';
 
+import HomeRoutes from '../routes/HomeRoutes';
 import MenuDrawer from '../modules/MenuDrawer';
 import Header from '../components/Header';
-import Account from '../components/Account';
-import Todo from '../components/Todo';
 import { authMiddleWare } from '../util/auth'
 
 const styles = (theme) => ({
 	root: {
-		display: 'flex'
+		display: 'flex',
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginTop: theme.spacing(10)
 	},
 	uiProgess: {
 		position: 'fixed',
@@ -100,7 +103,8 @@ class Home extends Component {
 						onAccountClick={this.loadAccountPage}
 						onLogoutClick={this.logoutHandler}
 					/>
-					<div>{this.state.render ? <Account /> : <Todo />}</div>
+					<HomeRoutes />
+					{this.state.errorMsg && <MuiAlert severity="error" autoHideDuration={6000}>{this.state.errorMsg}</MuiAlert>}
 				</div>
 			);
 		}

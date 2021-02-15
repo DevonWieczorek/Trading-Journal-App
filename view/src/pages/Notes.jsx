@@ -91,7 +91,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 	return <Slide direction="up" ref={ref} {...props} />;
 });
 
-class Todo extends Component {
+class Notes extends Component {
 	constructor(props) {
 		super(props);
 
@@ -388,4 +388,4 @@ class Todo extends Component {
 	}
 }
 
-export default withStyles(styles)(Todo);
+export default withStyles(styles)(Notes);

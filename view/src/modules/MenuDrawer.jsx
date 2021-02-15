@@ -2,12 +2,14 @@ import React from 'react';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
+import Link from '@material-ui/core/Link';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import NotesIcon from '@material-ui/icons/Notes';
 import Avatar from '@material-ui/core/avatar';
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import withStyles from '@material-ui/core/styles/withStyles';
 
@@ -57,21 +59,38 @@ const MenuDrawer = ({ classes, user, onTodoClick, onAccountClick, onLogoutClick 
         </center>
         <Divider />
         <List>
-            <ListItem button key="Todo" onClick={onTodoClick}>
-                <ListItemIcon>
-                    {' '}
-                    <NotesIcon />{' '}
-                </ListItemIcon>
-                <ListItemText primary="Todo" />
-            </ListItem>
+			<Link href="/trades">
+				<ListItem button key="Trades" onClick={onTodoClick}>
+					<ListItemIcon>
+						{' '}
+						<SwapHorizIcon />{' '}
+					</ListItemIcon>
+					<ListItemText primary="Trades" />
+	            </ListItem>
+			</Link>
 
-            <ListItem button key="Account" onClick={onAccountClick}>
-                <ListItemIcon>
-                    {' '}
-                    <AccountBoxIcon />{' '}
-                </ListItemIcon>
-                <ListItemText primary="Account" />
-            </ListItem>
+			<Link href="/notes">
+	            <ListItem button key="Notes" onClick={onTodoClick}>
+						<ListItemIcon>
+		                    {' '}
+		                    <NotesIcon />{' '}
+		                </ListItemIcon>
+		                <ListItemText primary="Notes" />
+	            </ListItem>
+			</Link>
+
+
+			<Divider />
+
+			<Link href="/account">
+				<ListItem button key="Account" onClick={onAccountClick}>
+	                <ListItemIcon>
+	                    {' '}
+	                    <AccountBoxIcon />{' '}
+	                </ListItemIcon>
+	                <ListItemText primary="Account" />
+	            </ListItem>
+			</Link>
 
             <ListItem button key="Logout" onClick={onLogoutClick}>
                 <ListItemIcon>
