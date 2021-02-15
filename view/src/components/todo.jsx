@@ -49,7 +49,7 @@ const styles = ((theme) => ({
 	form: {
 		width: '98%',
 		marginLeft: 13,
-		marginTop: theme.spacing(3)
+		marginTop: theme.spacing(10)
 	},
 	toolbar: theme.mixins.toolbar,
 	root: {
@@ -272,7 +272,7 @@ class Todo extends Component {
 									<CloseIcon />
 								</IconButton>
 								<Typography variant="h6" className={classes.title}>
-									{this.state.buttonType === 'Edit' ? 'Edit Todo' : 'Create a new Todo'}
+									{this.state.buttonType === 'Edit' ? 'Edit Note' : 'Create a new Note'}
 								</Typography>
 								<Button
 									autoFocus
@@ -293,7 +293,7 @@ class Todo extends Component {
 										required
 										fullWidth
 										id="todoTitle"
-										label="Todo Title"
+										label="Title"
 										name="title"
 										autoComplete="todoTitle"
 										helperText={errors.title}
@@ -308,7 +308,7 @@ class Todo extends Component {
 										required
 										fullWidth
 										id="todoDetails"
-										label="Todo Details"
+										label="Details"
 										name="body"
 										autoComplete="todoDetails"
 										multiline

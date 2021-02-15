@@ -5,9 +5,9 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import withStyles from '@material-ui/core/styles/withStyles';
 
 import MenuDrawer from '../modules/MenuDrawer';
-import Header from '../components/header';
-import Account from '../components/account';
-import Todo from '../components/todo';
+import Header from '../components/Header';
+import Account from '../components/Account';
+import Todo from '../components/Todo';
 import { authMiddleWare } from '../util/auth'
 
 const styles = (theme) => ({
