@@ -131,6 +131,36 @@ const ViewNoteDialog = ({ title, body, onOpen, onClose }) => (
     </DialogBox>
 );
 
+const NoteCard = ({ item, classes, onOpenClick, onEditClick, onDeleteClick }) => (
+    <Grid item xs={12} sm={6}>
+        <Card className={classes.root} variant="outlined">
+            <CardContent>
+                <Typography variant="h5" component="h2">
+                    {item.title}
+                </Typography>
+                <Typography className={classes.pos} color="textSecondary">
+                    {dayjs(item.createdAt).fromNow()}
+                </Typography>
+                <Typography variant="body2" component="p">
+                    {`${item.body.substring(0, 65)}`}
+                </Typography>
+            </CardContent>
+            <CardActions>
+                <Button size="small" color="primary" onClick={onOpenClick}>
+                    {' '}
+                    View{' '}
+                </Button>
+                <Button size="small" color="primary" onClick={onEditClick}>
+                    Edit
+                </Button>
+                <Button size="small" color="primary" onClick={onDeleteClick}>
+                    Delete
+                </Button>
+            </CardActions>
+        </Card>
+    </Grid>
+);
+
 class Notes extends Component {
 	constructor(props) {
 		super(props);
@@ -279,33 +309,13 @@ class Notes extends Component {
 
 					<Grid container spacing={2}>
 						{this.state.todos.map((todo) => (
-							<Grid item xs={12} sm={6}>
-								<Card className={classes.root} variant="outlined">
-									<CardContent>
-										<Typography variant="h5" component="h2">
-											{todo.title}
-										</Typography>
-										<Typography className={classes.pos} color="textSecondary">
-											{dayjs(todo.createdAt).fromNow()}
-										</Typography>
-										<Typography variant="body2" component="p">
-											{`${todo.body.substring(0, 65)}`}
-										</Typography>
-									</CardContent>
-									<CardActions>
-										<Button size="small" color="primary" onClick={() => this.handleViewOpen({ todo })}>
-											{' '}
-											View{' '}
-										</Button>
-										<Button size="small" color="primary" onClick={() => this.handleEditClickOpen({ todo })}>
-											Edit
-										</Button>
-										<Button size="small" color="primary" onClick={() => this.deleteTodoHandler({ todo })}>
-											Delete
-										</Button>
-									</CardActions>
-								</Card>
-							</Grid>
+                            <NoteCard
+                                item={todo}
+                                classes={classes}
+                                onOpenClick={() => this.handleViewOpen({ todo })}
+                                onEditClick={() => this.handleEditClickOpen({ todo })}
+                                onDeleteClick={() => this.deleteTodoHandler({ todo })}
+                            />
 						))}
 					</Grid>
 
