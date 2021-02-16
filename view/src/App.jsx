@@ -7,9 +7,9 @@ import MainRoutes from './routes/MainRoutes';
 const theme = createMuiTheme({
 	palette: {
 		primary: {
-			light: '#33c9dc',
-			main: '#FF5722',
-			dark: '#d50000',
+			light: '#33eb91',
+			main: '#00e676',
+			dark: '#00a152',
 			contrastText: '#fff'
 		}
 	}

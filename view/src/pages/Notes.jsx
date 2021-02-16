@@ -1,27 +1,20 @@
 import React, { Component } from 'react'
 
+import axios from 'axios';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import Slide from '@material-ui/core/Slide';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CardContent from '@material-ui/core/CardContent';
-import MuiDialogTitle from '@material-ui/core/DialogTitle';
-import MuiDialogContent from '@material-ui/core/DialogContent';
-
-import axios from 'axios';
-import dayjs from 'dayjs';
-import relativeTime from 'dayjs/plugin/relativeTime';
+import DialogBox from '../components/DialogBox';
 import { authMiddleWare } from '../util/auth';
 
 const styles = ((theme) => ({
@@ -29,18 +22,6 @@ const styles = ((theme) => ({
         flexGrow: 1,
         padding: theme.spacing(3),
     },
-    title: {
-		marginLeft: theme.spacing(2),
-		flex: 1
-	},
-	submitButton: {
-		display: 'block',
-		color: 'white',
-		textAlign: 'center',
-		position: 'absolute',
-		top: 14,
-		right: 10
-	},
 	floatingButton: {
 		position: 'fixed',
 		bottom: 0,
@@ -49,7 +30,6 @@ const styles = ((theme) => ({
 	form: {
 		width: '98%',
 		marginLeft: 13,
-		marginTop: theme.spacing(10)
 	},
 	toolbar: theme.mixins.toolbar,
 	root: {
@@ -71,25 +51,85 @@ const styles = ((theme) => ({
 		left: '50%',
 		top: '35%'
 	},
-	dialogeStyle: {
-		maxWidth: '50%'
-	},
-	viewRoot: {
-		margin: 0,
-		padding: theme.spacing(2)
-	},
-	closeButton: {
-		position: 'absolute',
-		right: theme.spacing(1),
-		top: theme.spacing(1),
-		color: theme.palette.grey[500]
-	}
     })
 );
 
-const Transition = React.forwardRef(function Transition(props, ref) {
-	return <Slide direction="up" ref={ref} {...props} />;
-});
+const CreateNoteDialog = ({ title, body, onOpen, onClose, onChange, onSubmit, buttonType, classes, errors }) => (
+    <DialogBox
+        title={buttonType === 'Edit' ? 'Edit Note' : 'Create a new Note'}
+        onOpen={onOpen}
+        onClose={onClose}
+    >
+        <form className={classes.form} noValidate>
+            <Grid container spacing={2}>
+                <Grid item xs={12}>
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="todoTitle"
+                        label="Title"
+                        name="title"
+                        autoComplete="todoTitle"
+                        helperText={errors.title}
+                        value={title}
+                        error={errors.title ? true : false}
+                        onChange={onChange}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <TextField
+                        variant="outlined"
+                        required
+                        fullWidth
+                        id="todoDetails"
+                        label="Details"
+                        name="body"
+                        autoComplete="todoDetails"
+                        multiline
+                        rows={25}
+                        rowsMax={25}
+                        helperText={errors.body}
+                        error={errors.body ? true : false}
+                        onChange={onChange}
+                        value={body}
+                    />
+                </Grid>
+                <Grid item xs={12}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={onSubmit}
+                    >
+                        {buttonType === 'Edit' ? 'Save' : 'Submit'}
+                    </Button>
+                </Grid>
+            </Grid>
+        </form>
+    </DialogBox>
+);
+
+const ViewNoteDialog = ({ title, body, onOpen, onClose }) => (
+    <DialogBox
+        title={title}
+        onOpen={onOpen}
+        onClose={onClose}
+    >
+        <TextField
+            fullWidth
+            id="noteDetails"
+            name="body"
+            multiline
+            readonly
+            rows={1}
+            rowsMax={25}
+            value={body}
+            InputProps={{
+                disableUnderline: true
+            }}
+        />
+    </DialogBox>
+);
 
 class Notes extends Component {
 	constructor(props) {
@@ -169,26 +209,6 @@ class Notes extends Component {
 	}
 
 	render() {
-		const DialogTitle = withStyles(styles)((props) => {
-			const { children, classes, onClose, ...other } = props;
-			return (
-				<MuiDialogTitle disableTypography className={classes.root} {...other}>
-					<Typography variant="h6">{children}</Typography>
-					{onClose ? (
-						<IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
-							<CloseIcon />
-						</IconButton>
-					) : null}
-				</MuiDialogTitle>
-			);
-		});
-
-		const DialogContent = withStyles((theme) => ({
-			viewRoot: {
-				padding: theme.spacing(2)
-			}
-		}))(MuiDialogContent);
-
 		dayjs.extend(relativeTime);
 		const { classes } = this.props;
 		const { open, errors, viewOpen } = this.state;
@@ -257,73 +277,6 @@ class Notes extends Component {
 				<main className={classes.content}>
 					<div className={classes.toolbar} />
 
-					<IconButton
-						className={classes.floatingButton}
-						color="primary"
-						aria-label="Add Todo"
-						onClick={handleClickOpen}
-					>
-						<AddCircleIcon style={{ fontSize: 60 }} />
-					</IconButton>
-					<Dialog fullScreen open={open} onClose={handleClose} TransitionComponent={Transition}>
-						<AppBar className={classes.appBar}>
-							<Toolbar>
-								<IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-									<CloseIcon />
-								</IconButton>
-								<Typography variant="h6" className={classes.title}>
-									{this.state.buttonType === 'Edit' ? 'Edit Note' : 'Create a new Note'}
-								</Typography>
-								<Button
-									autoFocus
-									color="inherit"
-									onClick={handleSubmit}
-									className={classes.submitButton}
-								>
-									{this.state.buttonType === 'Edit' ? 'Save' : 'Submit'}
-								</Button>
-							</Toolbar>
-						</AppBar>
-
-						<form className={classes.form} noValidate>
-							<Grid container spacing={2}>
-								<Grid item xs={12}>
-									<TextField
-										variant="outlined"
-										required
-										fullWidth
-										id="todoTitle"
-										label="Title"
-										name="title"
-										autoComplete="todoTitle"
-										helperText={errors.title}
-										value={this.state.title}
-										error={errors.title ? true : false}
-										onChange={this.handleChange}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<TextField
-										variant="outlined"
-										required
-										fullWidth
-										id="todoDetails"
-										label="Details"
-										name="body"
-										autoComplete="todoDetails"
-										multiline
-										rows={25}
-										rowsMax={25}
-										helperText={errors.body}
-										error={errors.body ? true : false}
-										onChange={this.handleChange}
-										value={this.state.body}
-									/>
-								</Grid>
-							</Grid>
-						</form>
-					</Dialog>
-
 					<Grid container spacing={2}>
 						{this.state.todos.map((todo) => (
 							<Grid item xs={12} sm={6}>
@@ -356,32 +309,33 @@ class Notes extends Component {
 						))}
 					</Grid>
 
-					<Dialog
-						onClose={handleViewClose}
-						aria-labelledby="customized-dialog-title"
-						open={viewOpen}
-						fullWidth
-						classes={{ paperFullWidth: classes.dialogeStyle }}
+                    <IconButton
+						className={classes.floatingButton}
+						color="primary"
+						aria-label="Add Note"
+						onClick={handleClickOpen}
 					>
-						<DialogTitle id="customized-dialog-title" onClose={handleViewClose}>
-							{this.state.title}
-						</DialogTitle>
-						<DialogContent dividers>
-							<TextField
-								fullWidth
-								id="todoDetails"
-								name="body"
-								multiline
-								readonly
-								rows={1}
-								rowsMax={25}
-								value={this.state.body}
-								InputProps={{
-									disableUnderline: true
-								}}
-							/>
-						</DialogContent>
-					</Dialog>
+						<AddCircleIcon style={{ fontSize: 60 }} />
+					</IconButton>
+
+                    <CreateNoteDialog
+                        title={this.state.title}
+                        body={this.state.body}
+                        buttonType={this.state.buttonType}
+                        onOpen={open}
+                        onClose={handleClose}
+                        onChange={this.handleChange}
+                        onSubmit={handleSubmit}
+                        classes={classes}
+                        errors={errors}
+                    />
+
+                    <ViewNoteDialog
+                        title={this.state.title}
+                        body={this.state.body}
+                        onOpen={viewOpen}
+                        onClose={handleViewClose}
+                    />
 				</main>
 			);
 		}
